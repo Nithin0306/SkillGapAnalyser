@@ -72,6 +72,7 @@ python main.py
 Configure Environment Variables:
 GEMINI_API_KEY
 YOUTUBE_API_KEY
+GOOGLE_API_KEY
 
 Team members
 
@@ -84,3 +85,47 @@ Team members
 License
 
 MIT License © 2025 Team Novichoks
+
+-HACKATHON
+
+------------------
+--backend
+------------------
+    -main.py
+    -env
+--------------------
+--frontend
+--------------------
+    -skillGapAnalyzer
+    -node modules
+    -public
+    -src
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        -assets
+        -components
+            -about.jsx
+            -features.jsx
+            -header.jsx
+            -home.jsx
+            -navbar.jsx
+        -App.css
+        -App.jss
+        -index.css
+        -main.jsx
+        -README.md

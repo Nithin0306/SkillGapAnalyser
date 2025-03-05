@@ -83,7 +83,7 @@ async def analyze_resume(file: UploadFile, job_title: str = Form(...)):
 @app.get("/fetch_courses/{skill}")
 def fetch_courses(skill: str):
     query = f"best online courses for {skill} site:coursera.org OR site:udemy.com"
-    search_results = [f"Dummy Course {i} for {skill}" for i in range(1, 6)]
+    search_results = [f"Coursera Course {i} for {skill}" for i in range(1, 6)]
     return {"courses": [{"title": result, "link": f"https://example.com/{i}"} for i, result in enumerate(search_results, start=1)]}
 
 @app.get("/youtube-courses/{skill}")
