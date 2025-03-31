@@ -1,0 +1,7 @@
+fastapi.middleware.cors
+pydantic
+typing
+fitz 
+dotenv
+fastapi
+uvicorn

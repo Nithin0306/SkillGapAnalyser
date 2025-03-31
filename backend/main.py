@@ -9,14 +9,16 @@ import requests
 
 app = FastAPI()
 
+
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173","https://skill-gap-analyser.vercel.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Load environment variables
 load_dotenv()
