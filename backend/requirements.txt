@@ -1,8 +1,5 @@
-fastapi.middleware.cors
-pydantic
-typing
-fitz 
-dotenv
 fastapi
 uvicorn
-
+pydantic
+python-dotenv
+pymupdf
