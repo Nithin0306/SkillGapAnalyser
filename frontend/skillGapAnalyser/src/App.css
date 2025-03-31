@@ -533,3 +533,12 @@ nav .logo {
   font-weight: 600;
 }
 
+.logo-img img{
+  height: 5rem;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

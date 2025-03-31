@@ -5,3 +5,4 @@ fitz
 dotenv
 fastapi
 uvicorn
+

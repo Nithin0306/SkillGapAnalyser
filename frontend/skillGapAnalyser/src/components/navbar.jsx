@@ -1,11 +1,17 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "../App.css";
+import logo from "../assets/logo.png";
 
 const Navbar = () => {
   return (
     <nav>
-      <div className="logo">Skill Up</div>
+      <div className="logo-container">
+        <div className="logo-img">
+          <img src={logo} alt="logo" />
+        </div>
+        <div className="logo">Skill Up</div>
+      </div>
       <ul>
         <li>
           <NavLink to="/" activeClassName="active">
