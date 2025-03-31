@@ -1,10 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom"; // Import NavLink instead of Link
+import { NavLink } from "react-router-dom";
 import "../App.css";
 
 const Navbar = () => {
   return (
     <nav>
+      <div className="logo">Skill Up</div>
       <ul>
         <li>
           <NavLink to="/" activeClassName="active">
@@ -21,7 +22,6 @@ const Navbar = () => {
             Features
           </NavLink>
         </li>
-        
       </ul>
     </nav>
   );

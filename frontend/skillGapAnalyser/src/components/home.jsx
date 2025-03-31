@@ -13,9 +13,14 @@ const Home = () => {
   const [jobRecommendations, setJobRecommendations] = useState("");
   const [projectIdeas, setProjectIdeas] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fileName, setFileName] = useState("No file chosen");
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
+    }
   };
 
   const handleJobTitleChange = (e) => {
@@ -103,6 +108,69 @@ const Home = () => {
     setLoading(false);
   };
 
+  // Function to format job recommendations - Improved to better handle the formatting
+  const formatJobRecommendations = (text) => {
+    if (!text) return null;
+
+    // Split the text into sections (one job per section)
+    const jobSections = text.split(/\d+\.\s+/);
+
+    // Filter out empty sections and process each job
+    return jobSections
+      .filter((section) => section.trim().length > 0)
+      .map((section) => {
+        // Extract job title - everything up to the first "* **"
+        const titleMatch = section.match(/^([^*]+)/);
+        const title = titleMatch ? titleMatch[1].trim() : "Job Title";
+
+        // Extract description
+        const descMatch = section.match(
+          /\*\s+\*\*Description:\*\*\s+(.*?)(?=\*\s+\*\*|$)/s
+        );
+        const description = descMatch ? descMatch[1].trim() : "";
+
+        // Extract skills
+        const skillsMatch = section.match(
+          /\*\s+\*\*Key Required Skills:\*\*\s+(.*?)(?=\*\s+\*\*|$)/s
+        );
+        const skills = skillsMatch ? skillsMatch[1].trim() : "";
+
+        // Extract career path
+        const pathMatch = section.match(
+          /\*\s+\*\*Potential Career Path:\*\*\s+(.*?)(?=\*\s+\*\*|$)/s
+        );
+        const careerPath = pathMatch ? pathMatch[1].trim() : "";
+
+        return {
+          title,
+          description,
+          skills,
+          careerPath,
+        };
+      });
+  };
+
+  // Function to format project ideas - Improved to remove stars and markdown formatting
+  const formatProjectIdeas = (text) => {
+    if (!text) return null;
+
+    const projects = text.split(/\d+\.\s+Project Title:/g);
+
+    return projects
+      .filter((project) => project.trim().length > 0)
+      .map((project) => {
+        // Clean up the text by removing markdown symbols and extra spaces
+        return project.replace(/\*\*/g, "").replace(/##/g, "").trim();
+      });
+  };
+
+  const formattedJobs = jobRecommendations
+    ? formatJobRecommendations(jobRecommendations)
+    : [];
+  const formattedProjects = projectIdeas
+    ? formatProjectIdeas(projectIdeas)
+    : [];
+
   return (
     <div>
       <Navbar />
@@ -114,15 +182,20 @@ const Home = () => {
         </h3>
 
         <form onSubmit={handleSubmit}>
-          <label className="file-label" htmlFor="resumeUpload">
-            Upload Resume (PDF/DOCX)
-          </label>
-          <input
-            type="file"
-            id="resumeUpload"
-            className="hidden-file-input"
-            onChange={handleFileChange}
-          />
+          <div className="file-upload-container">
+            <label className="file-label" htmlFor="resumeUpload">
+              Upload Resume (PDF/DOCX)
+            </label>
+            <input
+              type="file"
+              id="resumeUpload"
+              className="hidden-file-input"
+              onChange={handleFileChange}
+              accept=".pdf,.docx"
+            />
+            <div className="file-name">{fileName}</div>
+          </div>
+
           <input
             className="textbox"
             type="text"
@@ -131,32 +204,137 @@ const Home = () => {
             value={jobTitle}
             onChange={handleJobTitleChange}
           />
-          <br /> <br />
-          <img src={myGif} alt="Processing..."></img> <br />
-          <button type="submit">Analyze</button>
+
+          <img src={myGif} alt="Processing..." />
+
+          <button type="submit">
+            {loading ? "Analyzing..." : "Analyze Resume"}
+          </button>
         </form>
 
+        {loading && <div className="loading">Analyzing your resume...</div>}
+
         {missingSkills.length > 0 && (
-          <div className="results-section">
-            <h2>Missing Skills:</h2>
-            <ul className="miss">
+          <div className="results-section skills-section">
+            <h2>Missing Skills</h2>
+            <div className="skills-container">
               {missingSkills.map((skill, index) => (
-                <li key={index}>{skill}</li>
+                <div key={index} className="skill-item">
+                  <span className="skill-bullet">•</span> {skill}
+                </div>
               ))}
-            </ul>
+            </div>
+          </div>
+        )}
+
+        {formattedJobs && formattedJobs.length > 0 && (
+          <div className="results-section jobs-section">
+            <h2>Job Recommendations</h2>
+            {formattedJobs.map((job, index) => (
+              <div key={index} className="job-card">
+                <h3 className="job-title">{job.title.replace(/\*\*/g, "")}</h3>
+                <div className="job-details">
+                  <div className="job-detail">
+                    <strong>Description</strong> {job.description}
+                  </div>
+                  <div className="job-detail">
+                    <strong>Key Required Skills</strong> {job.skills}
+                  </div>
+                  <div className="job-detail">
+                    <strong>Potential Career Path</strong> {job.careerPath}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {formattedProjects && formattedProjects.length > 0 && (
+          <div className="results-section">
+            <h2>Project Ideas</h2>
+            <div className="projects-grid">
+              {formattedProjects.map((projectText, index) => {
+                // Parse project details from each individual project text
+                const getField = (regex) => {
+                  const match = projectText.match(regex);
+                  return match ? match[1].trim() : "";
+                };
+
+                // Extract all fields for each separate project
+                const titleMatch = projectText.match(
+                  /Project Title:\s*(.*?)(?=\s*Description:|$)/s
+                );
+                const title = titleMatch ? titleMatch[1].trim() : "Project";
+
+                const descriptionMatch = projectText.match(
+                  /Description:\s*(.*?)(?=\s*Key Skills Demonstrated:|$)/s
+                );
+                const description = descriptionMatch
+                  ? descriptionMatch[1].trim()
+                  : "";
+
+                const skillsMatch = projectText.match(
+                  /Key Skills Demonstrated:\s*(.*?)(?=\s*Potential Real-World Impact:|$)/s
+                );
+                const skills = skillsMatch ? skillsMatch[1].trim() : "";
+
+                const impactMatch = projectText.match(
+                  /Potential Real-World Impact:\s*(.*?)(?=\s*Difficulty Level:|$)/s
+                );
+                const impact = impactMatch ? impactMatch[1].trim() : "";
+
+                const difficultyMatch = projectText.match(
+                  /Difficulty Level:\s*(.*?)$/s
+                );
+                const difficulty = difficultyMatch
+                  ? difficultyMatch[1].trim()
+                  : "Intermediate";
+
+                return (
+                  <div key={index} className="project-card">
+                    <div className="project-title">{title}</div>
+
+                    <div className="project-section">
+                      <div className="section-label">Description:</div>
+                      <div className="section-content">{description}</div>
+                    </div>
+
+                    <div className="project-section">
+                      <div className="section-label">
+                        Key Skills Demonstrated:
+                      </div>
+                      <div className="section-content">{skills}</div>
+                    </div>
+
+                    <div className="project-section">
+                      <div className="section-label">
+                        Potential Real-World Impact:
+                      </div>
+                      <div className="section-content">{impact}</div>
+                    </div>
+
+                    <div className="project-section">
+                      <div className="section-label">Difficulty Level:</div>
+                      <div className="section-content">{difficulty}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
         {courses.length > 0 && (
           <div className="results-section">
-            <h2>Recommended Courses:</h2>
-            <ul>
+            <h2>Recommended Courses</h2>
+            <ul className="courses-list">
               {courses.map((course, index) => (
-                <li key={index}>
+                <li key={index} className="course-item">
                   <a
                     href={course.link}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="course-link"
                   >
                     {course.title}
                   </a>
@@ -168,47 +346,37 @@ const Home = () => {
 
         {videos.length > 0 && (
           <div className="results-section">
-            <h2>YouTube Courses:</h2>
+            <h2>YouTube Courses</h2>
             <ul className="videos">
               {videos.map((video, index) => (
-                <li key={index}>
+                <li key={index} className="video-item">
                   <img
                     src={video.thumbnail}
                     alt={video.title}
                     className="video-thumbnail"
                   />
-                  <div>
+                  <div className="video-info">
                     <a
                       href={`https://www.youtube.com/watch?v=${video.video_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="video-link"
                     >
                       {video.title}
                     </a>
-                    <p>{video.channel}</p>
+                    <p className="video-channel">{video.channel}</p>
                   </div>
                 </li>
               ))}
             </ul>
           </div>
         )}
-
-        {jobRecommendations && (
-          <div className="results-section">
-            <h2>Job Recommendations:</h2>
-            <pre>{jobRecommendations}</pre>
-          </div>
-        )}
-
-        {projectIdeas && (
-          <div className="results-section">
-            <h2>Project Ideas:</h2>
-            <pre>{projectIdeas}</pre>
-          </div>
-        )}
       </div>
     </div>
   );
+  
 };
+
+
 
 export default Home;

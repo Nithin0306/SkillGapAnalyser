@@ -212,7 +212,7 @@ async def project_generator(request: SkillsRequest):
                             "3. Key Skills Demonstrated\n"
                             "4. Potential Real-World Impact\n"
                             "5. Difficulty Level (Beginner/Intermediate/Advanced)\n"
-                            "Format the response as a clear, structured list."
+                            "Format the response as a clear, structured list and leave a line space after each project ideas."
                         }
                     ]
                 }

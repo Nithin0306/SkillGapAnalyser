@@ -8,7 +8,7 @@ The AI-Based Skill Gap Analyzer is an intelligent system designed to help profes
 
 Problem Statement
 
-In today's competitive job market, individuals often struggle to identify the exact skill gaps preventing them from securing their desired roles. Generic career advice lacks personalization, and finding the right learning resources (from platforms like Coursera or YouTube) is time-consuming, making skill development inefficient.
+
 
 ---
 
@@ -25,7 +25,7 @@ Our AI-Based Skill Gap Analyzer bridges skill gaps through the following steps:
 ---
 
 Features
-
+In today's competitive job market, individuals often struggle to identify the exact skill gaps preventing them from securing their desired roles. Generic career advice lacks personalization, and finding the right learning resources (from platforms like Coursera or YouTube) is time-consuming, making skill development inefficient.
 - AI-Powered Skill Gap Detection: Identifies missing skills by analyzing resumes and job requirements.
 - Automated Course Recommendations: Fetches relevant courses from Coursera.
 - YouTube Integration: Recommends free video tutorials for skill-building.

@@ -9,11 +9,9 @@ import Header from "./components/header";
 function App() {
   return (
     <Router>
-      <div className="logo">
-        <h2>Skill Gap Analyzer</h2>
-      </div>
+    
       <Routes>
-        <Route path="/header" element={<Header />} />
+       
         <Route path="/about" element={<About />} />
         <Route path="/features" element={<Features />} />
 
