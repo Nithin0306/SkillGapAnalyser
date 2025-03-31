@@ -10,6 +10,11 @@ import requests
 app = FastAPI()
 
 
+
+@app.get("/")
+def home():
+    return {"message": "Hello World"}
+
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
